@@ -96,7 +96,7 @@ func resolveRegion(svc *ec2.EC2, regionID string) (Region, error) {
 		AvailabilityZones: make(map[string]AvailabilityZone),
 	}
 	for _, az := range azs.AvailabilityZones {
-		azID := *az.ZoneName
+		azID := *az.ZoneId
 		az, err := resolveAvailabilityZone(svc, regionID, azID)
 		if err != nil {
 			return Region{}, errors.Annotatef(err, "failed resolving az %s", azID)
@@ -117,7 +117,7 @@ func resolveAvailabilityZone(svc *ec2.EC2, regionID string, azID string) (Availa
 				Values: []*string{stringPtr(azID)},
 			},
 		},
-		LocationType: stringPtr("availability-zone"),
+		LocationType: stringPtr("availability-zone-id"),
 		MaxResults:   int64Ptr(1000),
 	}
 	more := true
